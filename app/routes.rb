@@ -16,6 +16,7 @@ class Api::Routes < Roda
     begin
       before_tasks
       r.root { ' <center> <h3> G1 Ops (Cobal 2.0) </h3></center>' }
+      r.on('job_posts') { r.route('job_posts') }
     rescue => e
       result = e.respond_to?(:handle) ? e.handle : e.message
       Api.log(e.message)

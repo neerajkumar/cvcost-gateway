@@ -28,6 +28,12 @@ def require_files(files)
   files.each { |f| require f }
 end
 
+def load_files(files)
+  files.each { |f| load f }
+end
+
+load_files(Dir['./config/initializers/**/*.rb'])
+
 models = Dir['./app/models/**/*.rb']
 handlers = ['./app/routes.rb'] + Dir['./app/handlers/**/*.rb']
 

@@ -1,0 +1,10 @@
+default: &default
+  users:
+    endpoint: http://localhost:3001/api/v1
+  job_posts:
+    endpoint: http://localhost:3002/api/v1
+
+development: *default
+test: *default
+production: *default
+    
