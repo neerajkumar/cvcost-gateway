@@ -36,8 +36,11 @@ load_files(Dir['./config/initializers/**/*.rb'])
 
 models = Dir['./app/models/**/*.rb']
 handlers = ['./app/routes.rb'] + Dir['./app/handlers/**/*.rb']
+lib = Dir['./lib/**/*.rb']
 
+require_files(lib)
 require_files(models)
 require_files(handlers)
+
 
 require './app/routes'

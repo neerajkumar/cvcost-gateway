@@ -31,10 +31,15 @@ GEM
     puma (4.3.5)
       nio4r (~> 2.0)
     rack (2.2.3)
+    rack-cors (1.1.1)
+      rack (>= 2.0.0)
     rake (13.0.1)
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    redis (4.2.1)
+    request_store (1.5.0)
+      rack (>= 1.4)
     rerun (0.13.0)
       listen (~> 3.0)
     roda (3.33.0)
@@ -54,7 +59,10 @@ DEPENDENCIES
   faraday (~> 0.17.0)
   her
   puma
+  rack-cors
   rake
+  redis
+  request_store
   rerun
   roda
 

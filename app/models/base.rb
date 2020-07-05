@@ -1,5 +1,6 @@
 require 'yaml'
 require 'her'
+require 'lib/token_authentication'
 
 class Base
 
@@ -15,6 +16,7 @@ class Base
       api = Her::API.new
 
       api.setup url: service[:endpoint] do |c|
+        c.use TokenAuthentication
         c.use Faraday::Request::UrlEncoded
         c.use Her::Middleware::DefaultParseJSON
         c.use Faraday::Adapter::NetHttp

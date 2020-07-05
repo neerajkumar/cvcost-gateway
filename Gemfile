@@ -7,6 +7,9 @@ gem 'rake'
 gem 'her'
 gem 'faraday', '~> 0.17.0'
 gem 'activesupport',  require: ['active_support/core_ext']
+gem 'redis'
+gem 'request_store'
+gem 'rack-cors'
 group :development do
   gem 'rerun'
 end

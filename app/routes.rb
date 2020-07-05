@@ -17,6 +17,7 @@ class Api::Routes < Roda
       before_tasks
       r.root { ' <center> <h3> G1 Ops (Cobal 2.0) </h3></center>' }
       r.on('job_posts') { r.route('job_posts') }
+      r.on('users') { r.route('users') }
     rescue => e
       result = e.respond_to?(:handle) ? e.handle : e.message
       Api.log(e.message)
@@ -29,6 +30,7 @@ class Api::Routes < Roda
 
   def before_tasks
     @start_time = Time.now
+    RequestStore.store[:auth_token] = request.env['HTTP_AUTHORIZATION']
     set_default_status
   end
 
