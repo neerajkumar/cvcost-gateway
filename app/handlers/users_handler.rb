@@ -1,6 +1,6 @@
 Api::Routes.route('users') do |r|
   @data ||= r.params
-  @model = Session
+  @model = User
 
   def query(id=nil)
     @default_query ||= {}
@@ -10,12 +10,12 @@ Api::Routes.route('users') do |r|
 
   r.is 'login' do
     r.post do
-      resp = @model.create(@data)
+      resp = Session.create(@data)
       new_session = JSON.parse(resp.env.body)
       self.headers['Authorization'] = resp.env.response_headers['authorization']
       response.status = resp.status
       if new_session['success']
-        $redis.set(resp.env.response_headers['authorization'].gsub('Bearer', ''), Time.now.to_s)
+        $redis.set(resp.env.response_headers['authorization'], Time.now.to_s)
       end
       return new_session
     end
@@ -23,9 +23,18 @@ Api::Routes.route('users') do |r|
 
   r.is 'logout' do
     r.delete do
-      session = @model.new&.destroy
-      $redis.del(RequestStore.store[:auth_token].gsub('Bearer ', ''))
+      session = Session.new&.destroy
+      $redis.del(RequestStore.store[:auth_token])
       return
+    end
+  end
+
+  r.is 'me' do
+    r.get do
+      authenticate_user! do
+        user = @model.find(:me)
+        return JSON.parse(user.to_json)['_her_attributes'].merge!(success: true)
+      end
     end
   end
 end

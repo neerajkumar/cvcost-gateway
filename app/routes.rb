@@ -9,13 +9,12 @@ class Api::Routes < Roda
     "What?"
   end
 
-  attr_accessor :country_code
   DEFAULT_STATUS = { "GET" => 200, "PUT" => 204, "POST" => 201, "DELETE" => 204, "PATCH" => 204  }
 
   route do |r|
     begin
       before_tasks
-      r.root { ' <center> <h3> G1 Ops (Cobal 2.0) </h3></center>' }
+      r.root { ' <center> <h3> CVCOST Inc. </h3></center>' }
       r.on('job_posts') { r.route('job_posts') }
       r.on('users') { r.route('users') }
     rescue => e
@@ -45,6 +44,14 @@ class Api::Routes < Roda
 
   def set_default_status
     response.status = DEFAULT_STATUS[request.request_method]
+  end
+
+  def authenticate_user!(&block)
+    if !$redis.get(request.env['HTTP_AUTHORIZATION'])
+      response.status = 401
+      return { success: false, response: 'Access Denied!' }
+    end
+    yield
   end
 
 
