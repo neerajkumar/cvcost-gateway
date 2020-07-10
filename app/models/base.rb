@@ -1,6 +1,7 @@
 require 'yaml'
 require 'her'
 require 'lib/token_authentication'
+require 'lib/cvcost_custom_parser'
 
 class Base
 
@@ -18,7 +19,8 @@ class Base
       api.setup url: service[:endpoint] do |c|
         c.use TokenAuthentication
         c.use Faraday::Request::UrlEncoded
-        c.use Her::Middleware::DefaultParseJSON
+        c.use CvcostCustomParser
+        #c.use Her::Middleware::DefaultParseJSON
         c.use Faraday::Adapter::NetHttp
       end
 

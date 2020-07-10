@@ -47,11 +47,14 @@ class Api::Routes < Roda
   end
 
   def authenticate_user!(&block)
-    if !$redis.get(request.env['HTTP_AUTHORIZATION'])
+    unless $redis.get(request.env['HTTP_AUTHORIZATION'])
       response.status = 401
       return { success: false, response: 'Access Denied!' }
     end
     yield
+  rescue GatewayException => e
+    response.status = e.status || 401
+    return { success: false, response: e.message }
   end
 
 
