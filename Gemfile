@@ -12,6 +12,7 @@ gem 'request_store'
 gem 'rack-cors'
 group :development do
   gem 'rerun'
+  gem 'foreman'
 end
 
 group :development, :test do

@@ -15,6 +15,7 @@ GEM
     faraday (0.17.3)
       multipart-post (>= 1.2, < 3)
     ffi (1.13.1)
+    foreman (0.87.1)
     her (1.1.0)
       activemodel (>= 4.2.1)
       faraday (>= 0.8, < 1.0)
@@ -57,6 +58,7 @@ DEPENDENCIES
   byebug
   dotenv
   faraday (~> 0.17.0)
+  foreman
   her
   puma
   rack-cors

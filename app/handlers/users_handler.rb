@@ -42,9 +42,9 @@ Api::Routes.route('users') do |r|
     r.patch do
       authenticate_user! do
         user = @model.save_existing(:me, @data)
-        if user.respond_to?(:error) && user.error
-          response.status = user.status
-          return { success: false, error: user.error }
+        if user.respond_to?(:errors) && user.errors.present?
+          response.status = user[:errors][0][:status]
+          return { success: false, error: user[:errors][0][:detail] }
         else
           response.status = 200
           return { success: true, message: user.message }
