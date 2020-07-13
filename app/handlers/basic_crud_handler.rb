@@ -26,6 +26,8 @@ Api::Routes.route('basic_crud') do |r|
   end
 
   r.get do
-    @model.where(query).all.fetch
+    data = @model.where(query).all.fetch
+
+    return data.map { |model| JSON.parse(model.to_json)['_her_attributes'].merge!(success: true) }
   end
 end
