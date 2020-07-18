@@ -21,6 +21,9 @@ class Base
         c.use Faraday::Request::UrlEncoded
         c.use CvcostCustomParser
         #c.use Her::Middleware::DefaultParseJSON
+        c.use Faraday::Response::Logger, Api.logger
+        c.use FaradayMiddleware::FollowRedirects
+        c.use Faraday::Response::RaiseError
         c.use Faraday::Adapter::NetHttp
       end
 

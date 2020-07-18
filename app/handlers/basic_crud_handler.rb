@@ -22,7 +22,10 @@ Api::Routes.route('basic_crud') do |r|
   end
 
   r.post do
-    @model.create(@data)
+    authenticate_user! do
+      resp = @model.create(@data)
+      return { success: true, id: resp.id, message: resp.message }
+    end
   end
 
   r.get do

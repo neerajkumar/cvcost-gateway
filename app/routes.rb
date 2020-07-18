@@ -21,7 +21,7 @@ class Api::Routes < Roda
       result = e.respond_to?(:handle) ? e.handle : e.message
       Api.log(e.message)
       Api.log(e.backtrace)
-      return_errors(*result)
+      return_errors(e.response)
     ensure
       after_tasks
     end
@@ -58,8 +58,8 @@ class Api::Routes < Roda
   end
 
 
-  def return_errors(error, status=500)
-    response.status = status
-    request.halt [status, {'Content-Type'=>'application/json'}, [{error: error}.to_json]]
+  def return_errors(error)
+    response.status = error[:status]
+    request.halt [status, {'Content-Type'=>'application/json'}, [{success: false, error: JSON.parse(error[:body])}.to_json]]
   end
 end
