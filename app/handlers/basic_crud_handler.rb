@@ -7,9 +7,11 @@ Api::Routes.route('basic_crud') do |r|
     @default_query
   end
 
-  r.is(':id') do |id|
+  r.on(:id) do |id|
     r.get do
-      @model.q(query(id))&.as_json
+      data = @model.find(query(id))&.as_json
+
+      return data['_her_attributes'].merge(success: true)
     end
 
     r.put do
