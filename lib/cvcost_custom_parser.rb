@@ -1,15 +1,6 @@
-class GatewayException < Exception
-  attr_reader :message, :status
-
-  def initialize(message, status)
-    @message = message
-    @status = status
-  end
-end
-
 class CvcostCustomParser < Faraday::Response::Middleware
   def on_complete(env)
-    json = MultiJson.load(env[:body], symbolize_keys: true)
+    json = env[:body].blank? ? nil : MultiJson.load(env[:body], symbolize_keys: true)
     env[:body] = {
       data: data(json),
       errors: response_errors(json),
@@ -22,7 +13,7 @@ class CvcostCustomParser < Faraday::Response::Middleware
   private
 
   def data(json)
-    json || (json.is_a?(Array) ? []: {})
+    json || (json.is_a?(Array) ? [] : {})
   end
 
   def response_errors(json)

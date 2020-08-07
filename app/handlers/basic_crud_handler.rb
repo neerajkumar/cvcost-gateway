@@ -14,8 +14,12 @@ Api::Routes.route('basic_crud') do |r|
       return data['_her_attributes'].merge(success: true)
     end
 
-    r.put do
-      @model.q(query(id))&.update(@data)
+    r.patch do
+      authenticate_user! do
+        resp = @model.save_existing(id, @data)
+        response.status = 200
+        return { success: true, id: resp.job_post['id'], message: resp.message }
+      end
     end
 
     r.delete do
