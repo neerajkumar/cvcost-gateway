@@ -23,7 +23,11 @@ Api::Routes.route('basic_crud') do |r|
     end
 
     r.delete do
-      @model.q(query(id))&.delete
+      authenticate_user! do
+        resp = @model.destroy_existing(id)
+        response.status = 200
+        return { success: true, message: resp.message }
+      end
     end
   end
 
@@ -35,8 +39,11 @@ Api::Routes.route('basic_crud') do |r|
   end
 
   r.get do
-    data = @model.where(query).all.fetch
+    authenticate_user! do
+      authorize! :read, JobPost
+      data = @model.where(query).all.fetch
 
-    return data.map { |model| JSON.parse(model.to_json)['_her_attributes'].merge!(success: true) }
+      return data.map { |model| JSON.parse(model.to_json)['_her_attributes'].merge!(success: true) }
+    end
   end
 end

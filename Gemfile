@@ -11,6 +11,7 @@ gem 'activesupport',  require: ['active_support/core_ext']
 gem 'redis'
 gem 'request_store'
 gem 'rack-cors'
+gem 'cancancan'
 group :development do
   gem 'rerun'
   gem 'foreman'

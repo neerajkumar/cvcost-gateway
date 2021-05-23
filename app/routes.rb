@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+require_relative '../lib/authentication'
+require_relative '../lib/exception_handler'
+
 class Api::Routes < Roda
   plugin :all_verbs
   plugin :json, classes: [ Hash, Array ]
@@ -9,19 +12,18 @@ class Api::Routes < Roda
     "What?"
   end
 
-  DEFAULT_STATUS = { "GET" => 200, "PUT" => 204, "POST" => 201, "DELETE" => 204, "PATCH" => 204  }
+  include CanCan::ControllerAdditions
+  include Authentication
+  include ExceptionHandler
+
+  DEFAULT_STATUS = { 'GET' => 200, 'PUT' => 204, 'POST' => 201, 'DELETE' => 204, 'PATCH' => 204  }
 
   route do |r|
-    begin
+    catch_error do
       before_tasks
       r.root { ' <center> <h3> CVCOST Inc. </h3></center>' }
       r.on('job_posts') { r.route('job_posts') }
       r.on('users') { r.route('users') }
-    rescue => e
-      result = e.respond_to?(:handle) ? e.handle : e.message
-      Api.log(e.message)
-      Api.log(e.backtrace)
-      return_errors(e.response)
     ensure
       after_tasks
     end
@@ -44,22 +46,5 @@ class Api::Routes < Roda
 
   def set_default_status
     response.status = DEFAULT_STATUS[request.request_method]
-  end
-
-  def authenticate_user!(&block)
-    unless $redis.get(request.env['HTTP_AUTHORIZATION'])
-      response.status = 401
-      return { success: false, response: 'Access Denied!' }
-    end
-    yield
-  rescue GatewayException => e
-    response.status = e.status || 401
-    return { success: false, response: e.message }
-  end
-
-
-  def return_errors(error)
-    response.status = error[:status]
-    request.halt [status, {'Content-Type'=>'application/json'}, [{success: false, error: JSON.parse(error[:body])}.to_json]]
   end
 end
