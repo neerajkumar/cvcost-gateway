@@ -24,6 +24,7 @@ class Api::Routes < Roda
       r.root { ' <center> <h3> CVCOST Inc. </h3></center>' }
       r.on('job_posts') { r.route('job_posts') }
       r.on('users') { r.route('users') }
+      r.on('permissions') { r.route('permissions') }
     ensure
       after_tasks
     end
