@@ -10,7 +10,7 @@ Api::Routes.route('permissions') do |r|
       end
 
       accessible_entity = accessible_entity_id.present? ? accessible_entity_class.constantize.find(accessible_entity_id) : accessible_entity_class.constantize
-      { success: true, message: can?(permission.to_sym, accessible_entity) }
+      { success: true, can_access: can?(permission.to_sym, accessible_entity) }
     end
   end
 end
