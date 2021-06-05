@@ -25,6 +25,7 @@ class Api::Routes < Roda
       r.on('job_posts') { r.route('job_posts') }
       r.on('users') { r.route('users') }
       r.on('permissions') { r.route('permissions') }
+      r.on('passwords') { r.route('passwords') }
     ensure
       after_tasks
     end
