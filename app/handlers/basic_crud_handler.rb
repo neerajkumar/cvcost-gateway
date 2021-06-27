@@ -16,6 +16,7 @@ Api::Routes.route('basic_crud') do |r|
 
     r.patch do
       authenticate_user! do
+        authorize! :update, @model, id
         resp = @model.save_existing(id, @data)
         response.status = 200
         return { success: true, id: resp.job_post['id'], message: resp.message }
@@ -24,6 +25,7 @@ Api::Routes.route('basic_crud') do |r|
 
     r.delete do
       authenticate_user! do
+        authorize! :destroy, @model, id
         resp = @model.destroy_existing(id)
         response.status = 200
         return { success: true, message: resp.message }
@@ -33,6 +35,7 @@ Api::Routes.route('basic_crud') do |r|
 
   r.post do
     authenticate_user! do
+      authorize! :create, @model
       resp = @model.create(@data)
       return { success: true, id: resp.id, message: resp.message }
     end
@@ -40,7 +43,7 @@ Api::Routes.route('basic_crud') do |r|
 
   r.get do
     authenticate_user! do
-      authorize! :read, JobPost
+      authorize! :read, @model
       data = @model.where(query).all.fetch
 
       return data.map { |model| JSON.parse(model.to_json)['_her_attributes'].merge!(success: true) }
